@@ -54,6 +54,12 @@ namespace GameScripts.GameLogic
             response.PlayerId = g2CLoginGate.PlayerId;
 
             Log.Debug("登陆gate成功!");
+            
+            
+            G2C_EnterMap g2CEnterMap = await gateSession.Call(new C2G_EnterMap()) as G2C_EnterMap;
+            Log.Debug($"{g2CEnterMap.MyId}");
+            Log.Debug("登陆gate成功!");
+            
             await ETTask.CompletedTask;
         }
     }

@@ -14,7 +14,7 @@ message C2M_TestRequest // ILocationRequest
 	string request = 2;
 }
 
-message M2C_TestResponse // IResponse
+message M2C_TestResponse // ILocationResponse
 {
 	int32 RpcId = 1;
 	int32 Error = 2;

@@ -10,7 +10,12 @@ namespace ET.Server
         {
             UnitComponent unitComponent = scene.GetComponent<UnitComponent>();
             Unit unit = MongoHelper.Deserialize<Unit>(request.Unit);
-
+            
+            Unit oldUnit = unitComponent.GetChild<Unit>(unit.Id);
+            if (oldUnit != null)
+            {
+                oldUnit.Dispose();
+            }
             unitComponent.AddChild(unit);
             unitComponent.Add(unit);
 

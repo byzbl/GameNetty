@@ -64,7 +64,7 @@ namespace ET
 
     [MemoryPackable]
     [Message(OuterMessage.M2C_TestResponse)]
-    public partial class M2C_TestResponse : MessageObject, IResponse
+    public partial class M2C_TestResponse : MessageObject, ILocationResponse
     {
         public static M2C_TestResponse Create(bool isFromPool = false)
         {
