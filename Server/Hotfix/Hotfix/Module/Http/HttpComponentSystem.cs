@@ -30,6 +30,8 @@ namespace ET.Server
             }
             catch (HttpListenerException e)
             {
+                //netsh http add urlacl url=http://+:30300/  user=Everyone
+               // netsh advfirewall firewall Add rule name=\"http://+:30300/\" dir=in protocol=tcp localport=30300 action=allow
                 throw new Exception($"请先在cmd中运行: netsh http add urlacl url=http://*:你的address中的端口/ user=Everyone, address: {address}", e);
             }
         }
