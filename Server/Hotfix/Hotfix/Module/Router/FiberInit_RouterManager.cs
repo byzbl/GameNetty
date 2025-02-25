@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 
 namespace ET.Server
 {
@@ -10,6 +11,30 @@ namespace ET.Server
             Scene root = fiberInit.Fiber.Root;
             StartSceneConfig startSceneConfig = StartSceneConfigCategory.Instance.Get((int)root.Id);
             root.AddComponent<HttpComponent, string>($"http://+:{startSceneConfig.GetHttpPort()}/");
+
+            root.AddComponent<DBManagerComponent>();
+            var dbComponent = root.GetComponent<DBManagerComponent>().GetZoneDB(1);
+            /*var roleInfo = dbComponent.GetSqlSugarScope().Queryable<RoleInfo>()
+                    .Where(d => d.Id == 1).First();
+            if (roleInfo != null)
+            {
+                Log.Info(roleInfo.Name);
+            }*/
+            /*
+            root.AddComponent<RedisManagerComponent>();
+            bool f = await RedisHelper.SetString(root, root.Zone(), "test", "test123", TimeSpan.FromDays(1));
+            if (!f)
+            {
+                Log.Info("redis测试写入失败");
+            }
+            else
+            {
+                Log.Info("redis测试写入成功");
+            }
+
+            string test = await RedisHelper.GetString(root, root.Zone(), "test");
+            Log.Info(test);
+            */
 
             await ETTask.CompletedTask;
         }

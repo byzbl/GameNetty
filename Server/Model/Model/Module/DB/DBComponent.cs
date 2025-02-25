@@ -14,12 +14,12 @@ namespace ET.Server
         public MongoClient mongoClient;
         public IMongoDatabase database;
 
-        public SqlSugarScopeProvider m_sqlSugerProvider;
+        public SqlSugarScope m_sqlSuger;
 
 #pragma warning disable ET0006
-        public SqlSugarScopeProvider GetSqlSugarScopeProvider()
+        public SqlSugarScope GetSqlSugarScope()
         {
-            return m_sqlSugerProvider;
+            return m_sqlSuger;
         }
 #pragma warning restore ET0006
     }

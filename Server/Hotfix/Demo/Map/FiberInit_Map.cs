@@ -25,14 +25,7 @@ namespace ET.Server
                 root.AddComponent<HttpComponent, string>($"http://+:{startSceneConfig.GetHttpPort()}/");
             }
 
-            //root.AddComponent<DBManagerComponent>();
-            /*var dbComponent = root.GetComponent<DBManagerComponent>().GetZoneDB(1);
-            var roleInfo = dbComponent.GetSqlSugarScope().Queryable<RoleInfo>()
-                    .Where(d => d.Id == 1).First();
-            if (roleInfo != null)
-            {
-                Log.Info(roleInfo.Name);
-            }*/
+          
 
             await ETTask.CompletedTask;
         }
