@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ET.Server
 {
     [Code]
     public class HttpDispatcher: Singleton<HttpDispatcher>, ISingletonAwake
     {
-        private readonly Dictionary<string, Dictionary<int, IHttpHandler>> dispatcher = new();
+        private readonly Dictionary<string, Dictionary<SceneType, IHttpHandler>> dispatcher = new();
         
         public void Awake()
         {
@@ -32,11 +33,11 @@ namespace ET.Server
 
                 if (!this.dispatcher.TryGetValue(httpHandlerAttribute.Path, out var dict))
                 {
-                    dict = new Dictionary<int, IHttpHandler>();
+                    dict = new Dictionary<SceneType, IHttpHandler>();
                     this.dispatcher.Add(httpHandlerAttribute.Path, dict);
                 }
                 
-                dict.Add((int)httpHandlerAttribute.SceneType, ihttpHandler);
+                dict.Add(httpHandlerAttribute.SceneType, ihttpHandler);
             }
         }
 
@@ -44,7 +45,18 @@ namespace ET.Server
         {
             if (this.dispatcher.TryGetValue(path,out var httpHandlerDic))
             {
-                return httpHandlerDic[(int)sceneType];
+                if (httpHandlerDic.TryGetValue(sceneType, out IHttpHandler httpHandler))
+                {
+                    return httpHandler;
+                }
+
+                foreach (SceneType type in httpHandlerDic.Keys.ToList())
+                {
+                    if (type.HasSameFlag(sceneType))
+                    {
+                        return httpHandlerDic[type];
+                    }
+                }
             }
             Log.Warning($"Http had no path {path}");
             return null;
