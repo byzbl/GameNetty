@@ -1,4 +1,6 @@
-﻿namespace ET.Server
+﻿using System;
+
+namespace ET.Server
 {
     [MessageSessionHandler(SceneType.Gate)]
     public class C2G_EnterMapHandler: MessageSessionHandler<C2G_EnterMap, G2C_EnterMap>
@@ -22,7 +24,8 @@
             // 这里可以从DB中加载Unit
             Unit unit = UnitFactory.Create(scene, player.Id, UnitType.Player);
 
-            StartSceneConfig startSceneConfig = StartSceneConfigCategory.Instance.GetBySceneName(session.Zone(), "Map1");
+            StartSceneConfig startSceneConfig =
+                    StartSceneConfigCategory.Instance.Maps[(int)(player.Id % StartSceneConfigCategory.Instance.Maps.Count)];
             response.MyId = player.Id;
 
             // 等到一帧的最后面再传送，先让G2C_EnterMap返回，否则传送消息可能比G2C_EnterMap还早

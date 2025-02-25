@@ -797,6 +797,35 @@ namespace ET
         }
     }
 
+    [MemoryPackable]
+    [Message(InnerMessage.Center2Other_NotifyNodeInfoChgMsg)]
+    public partial class Center2Other_NotifyNodeInfoChgMsg : MessageObject, IMessage
+    {
+        public static Center2Other_NotifyNodeInfoChgMsg Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(Center2Other_NotifyNodeInfoChgMsg), isFromPool) as Center2Other_NotifyNodeInfoChgMsg;
+        }
+
+        [MemoryPackOrder(0)]
+        public int Op { get; set; }
+
+        [MemoryPackOrder(1)]
+        public List<string> NodeInfo { get; set; } = new();
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.Op = default;
+            this.NodeInfo.Clear();
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
     public static class InnerMessage
     {
         public const ushort ObjectQueryRequest = 20002;
@@ -822,5 +851,6 @@ namespace ET
         public const ushort ObjectQueryResponse = 20022;
         public const ushort M2M_UnitTransferRequest = 20023;
         public const ushort M2M_UnitTransferResponse = 20024;
+        public const ushort Center2Other_NotifyNodeInfoChgMsg = 20025;
     }
 }

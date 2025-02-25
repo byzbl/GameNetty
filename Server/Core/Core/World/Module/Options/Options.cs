@@ -16,6 +16,8 @@ namespace ET
         
         Demo,
         LockStep,
+        TestDocker,
+        Docker
     }
     
     public class Options: Singleton<Options>
@@ -37,5 +39,11 @@ namespace ET
         
         [Option("Console", Required = false, Default = 0)]
         public int Console { get; set; }
+        
+        [Option("SceneType", Required = false, Default = SceneType.None, HelpText = "SceneType enum")]
+        public SceneType SceneType { get; set; }
+        
+        [Option("CenterUrl", Required = false, Default = "", HelpText = "中心服域名")]
+        public string CenterUrl { get; set; }
     }
 }

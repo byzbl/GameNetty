@@ -37,37 +37,98 @@ namespace ET
         {
             foreach (StartSceneConfig startSceneConfig in this.DataList)
             {
-                this.ProcessScenes.Add(startSceneConfig.Process, startSceneConfig);
+                this.PostInit(startSceneConfig);
+            }
+        }
+
+        public void AddOrUpdate(StartSceneConfig cfg)
+        {
+            if (this._dataMap.TryGetValue(cfg.Id, out StartSceneConfig oldcfg))
+            {
+                _dataList.Remove(oldcfg);
+                _dataMap.Remove(oldcfg.Id);
+            }
+
+            _dataList.Add(cfg);
+            _dataMap.Add(cfg.Id, cfg);
+            this.PostInit(cfg);
+        }
+
+        private void PostInit(StartSceneConfig startSceneConfig)
+        {
+            this.ProcessScenes.Add(startSceneConfig.Process, startSceneConfig);
+
+            if (!this.ClientScenesByName.ContainsKey(startSceneConfig.Zone))
+            {
+                this.ClientScenesByName.Add(startSceneConfig.Zone, new Dictionary<string, StartSceneConfig>());
+            }
+
+            this.ClientScenesByName[startSceneConfig.Zone].Add(startSceneConfig.Name, startSceneConfig);
+
+            switch (startSceneConfig.Type)
+            {
+                case SceneType.Realm:
+                    this.Realms.Add(startSceneConfig);
+                    break;
+                case SceneType.Gate:
+                    this.Gates.Add(startSceneConfig.Zone, startSceneConfig);
+                    break;
+                case SceneType.Location:
+                    this.LocationConfig = startSceneConfig;
+                    break;
+                case SceneType.Router:
+                    this.Routers.Add(startSceneConfig);
+                    break;
+                case SceneType.Map:
+                    this.Maps.Add(startSceneConfig);
+                    break;
+                case SceneType.Match:
+                    this.Match = startSceneConfig;
+                    break;
+                case SceneType.BenchmarkServer:
+                    this.Benchmark = startSceneConfig;
+                    break;
+            }
+        }
+
+        public void Remove(int Id)
+        {
+            if (this._dataMap.TryGetValue(Id, out StartSceneConfig startSceneConfig))
+            {
+                this._dataList.Remove(startSceneConfig);
+                this._dataMap.Remove(startSceneConfig.Id);
+
+                this.ProcessScenes.Remove(startSceneConfig.Process, startSceneConfig);
 
                 if (!this.ClientScenesByName.ContainsKey(startSceneConfig.Zone))
                 {
                     this.ClientScenesByName.Add(startSceneConfig.Zone, new Dictionary<string, StartSceneConfig>());
                 }
 
-                this.ClientScenesByName[startSceneConfig.Zone].Add(startSceneConfig.Name, startSceneConfig);
+                this.ClientScenesByName[startSceneConfig.Zone].Remove(startSceneConfig.Name);
 
                 switch (startSceneConfig.Type)
                 {
                     case SceneType.Realm:
-                        this.Realms.Add(startSceneConfig);
+                        this.Realms.Remove(startSceneConfig);
                         break;
                     case SceneType.Gate:
-                        this.Gates.Add(startSceneConfig.Zone, startSceneConfig);
+                        this.Gates.Remove(startSceneConfig.Zone, startSceneConfig);
                         break;
                     case SceneType.Location:
-                        this.LocationConfig = startSceneConfig;
+                        this.LocationConfig = null;
                         break;
                     case SceneType.Router:
-                        this.Routers.Add(startSceneConfig);
+                        this.Routers.Remove(startSceneConfig);
                         break;
                     case SceneType.Map:
-                        this.Maps.Add(startSceneConfig);
+                        this.Maps.Remove(startSceneConfig);
                         break;
                     case SceneType.Match:
-                        this.Match = startSceneConfig;
+                        this.Match = null;
                         break;
                     case SceneType.BenchmarkServer:
-                        this.Benchmark = startSceneConfig;
+                        this.Benchmark = null;
                         break;
                 }
             }
@@ -132,6 +193,31 @@ namespace ET
         {
             this.ActorId = new ActorId(this.Process, this.Id, 1);
             this.Type = EnumHelper.FromString<SceneType>(this.SceneType);
+        }
+
+        // http监听端口,用于判断节点是否正常启动 
+        private readonly int HttpPort;
+
+        public int GetHttpPort()
+        {
+            if (this.HttpPort == 0)
+            {
+                return this.Port;
+            }
+
+            return this.HttpPort;
+        }
+
+        public StartSceneConfig(int Id, int Process, int Zone, string SceneType, string Name, int Port, int httpPort)
+        {
+            this.Id = Id;
+            this.Process = Process;
+            this.Zone = Zone;
+            this.SceneType = SceneType;
+            this.Name = Name;
+            this.Port = Port;
+            this.HttpPort = httpPort;
+            this.PostInit();
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Mime;
 using System.Net.Sockets;
 
 namespace ET
@@ -50,7 +51,10 @@ namespace ET
 			}
 			catch (Exception e)
 			{
-				throw new Exception($"bind error: {ipEndPoint}", e);
+				Log.Error($"bind error: {ipEndPoint} {e.Message}");
+				Console.ReadKey();
+				Environment.Exit(-1);
+				//throw new Exception($"bind error: {ipEndPoint}", e);
 			}
 			
 			this.acceptor.Listen(1000);

@@ -14,6 +14,9 @@
         public const int AITimer = 202;
         public const int SessionAcceptTimeout = 203;
         
+        public const int ServerNodeCheck = 204; //服务器节点在线监测
+        
+        
         public const int RoomUpdate = 301;
     }
 }

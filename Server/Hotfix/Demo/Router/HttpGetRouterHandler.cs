@@ -18,7 +18,7 @@ namespace ET.Server
             }
             foreach (StartSceneConfig startSceneConfig in StartSceneConfigCategory.Instance.Routers)
             {
-                response.Routers.Add($"{startSceneConfig.StartProcessConfig.OuterIP}:{startSceneConfig.Port}");
+                response.Routers.Add($"{startSceneConfig.StartProcessConfig.StartMachineConfig.GetPublicIP()}:{startSceneConfig.Port}");
             }
             HttpHelper.Response(context, response);
             await ETTask.CompletedTask;

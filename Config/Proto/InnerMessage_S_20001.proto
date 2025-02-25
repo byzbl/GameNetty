@@ -175,3 +175,9 @@ message M2M_UnitTransferResponse // IResponse
 	int32 Error = 2;
 	string Message = 3;
 }
+
+message Center2Other_NotifyNodeInfoChgMsg //IMessage
+{
+	int32 Op = 1;
+	repeated string NodeInfo = 2;
+}

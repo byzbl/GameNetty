@@ -7,6 +7,10 @@ namespace ET.Server
     {
         public override async ETTask Handle(FiberInit fiberInit)
         {
+            //location 内存占用
+            //0 86M
+            //100w 286M
+            //1000w 1680M
             Scene root = fiberInit.Fiber.Root;
             root.AddComponent<MailBoxComponent, MailBoxType>(MailBoxType.UnOrderedMessage);
             root.AddComponent<TimerComponent>();
@@ -15,6 +19,8 @@ namespace ET.Server
             root.AddComponent<MessageSender>();
             root.AddComponent<LocationManagerComoponent>();
 
+            StartSceneConfig startSceneConfig = StartSceneConfigCategory.Instance.Get(root.Fiber.Id);
+            root.AddComponent<HttpComponent, string>($"http://+:{startSceneConfig.GetHttpPort()}/");
             await ETTask.CompletedTask;
         }
     }

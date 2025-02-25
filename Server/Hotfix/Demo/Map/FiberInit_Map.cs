@@ -18,7 +18,9 @@ namespace ET.Server
             // root.AddComponent<RoomManagerComponent>();
             root.AddComponent<LocationProxyComponent>();
             root.AddComponent<MessageLocationSenderComponent>();
-
+            
+            StartSceneConfig startSceneConfig = StartSceneConfigCategory.Instance.Get((int)root.Id);
+            root.AddComponent<HttpComponent, string>($"http://+:{startSceneConfig.GetHttpPort()}/");
             await ETTask.CompletedTask;
         }
     }

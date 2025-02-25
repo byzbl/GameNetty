@@ -29,5 +29,36 @@ namespace ET
         partial void PostInit()
         {
         }
+
+        public StartProcessConfig(int Id,int MachineId, int Port)
+        {
+            this.Id = Id;
+            this.MachineId = MachineId;
+            this.Port = Port;
+            this.PostInit();
+        }
+    }
+    
+    public partial class StartProcessConfigCategory
+    {
+        public void AddOrUpdate(StartProcessConfig cfg)
+        {
+            if (this._dataMap.TryGetValue(cfg.Id, out StartProcessConfig oldcfg))
+            {
+                _dataList.Remove(oldcfg);
+                _dataMap.Remove(oldcfg.Id);
+            }
+            this.DataMap[cfg.Id] = cfg;
+            this.DataList.Add(cfg);
+        }
+        public void Remove(int Id)
+        {
+            if (this._dataMap.TryGetValue(Id, out StartProcessConfig oldcfg))
+            {
+                this._dataList.Remove(oldcfg);
+                this._dataMap.Remove(oldcfg.Id);
+            }
+        }
+        
     }
 }

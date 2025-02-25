@@ -46,7 +46,6 @@
     <ItemGroup>
       <Folder Include="Demo\Robot\Case\" />
       <Folder Include="Demo\Robot\Scene\" />
-      <Folder Include="Hotfix\Module\" />
     </ItemGroup>
 
 </Project>

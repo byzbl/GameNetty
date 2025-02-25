@@ -2,8 +2,8 @@
 
 namespace ET.Server
 {
-    [Invoke((long)SceneType.Match)]
-    public class FiberInit_Match: AInvokeHandler<FiberInit, ETTask>
+    [Invoke((long)SceneType.Center)]
+    public class FiberInit_Center: AInvokeHandler<FiberInit, ETTask>
     {
         public override async ETTask Handle(FiberInit fiberInit)
         {
@@ -13,13 +13,22 @@ namespace ET.Server
             root.AddComponent<CoroutineLockComponent>();
             root.AddComponent<ProcessInnerSender>();
             root.AddComponent<MessageSender>();
-            // root.AddComponent<MatchComponent>();
-            root.AddComponent<LocationProxyComponent>();
-            root.AddComponent<MessageLocationSenderComponent>();
+
+            root.AddComponent<DBManagerComponent>();
+           // root.AddComponent<RedisManagerComponent>();
+
+            //mysql 连接
+            /*DBHelper.GetMysqlGame(root);
+            DBHelper.GetMysqlLog(root);
+            DBHelper.GetMongoDB(root);
+            RedisHelper.GetClient(root, root.Zone());*/
+
+            root.AddComponent<NodeManagerComponent>();
 
             StartSceneConfig startSceneConfig = StartSceneConfigCategory.Instance.Get(root.Fiber.Id);
             root.AddComponent<HttpComponent, string>($"http://+:{startSceneConfig.GetHttpPort()}/");
-            
+
+            Log.Info($"http init {root.Scene().Id}");
             await ETTask.CompletedTask;
         }
     }
