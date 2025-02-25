@@ -9,14 +9,16 @@ namespace ET.Server
         {
             Scene root = fiberInit.Fiber.Root;
             StartSceneConfig startSceneConfig = StartSceneConfigCategory.Instance.Get((int)root.Id);
-            
+
             // 开发期间使用OuterIPPort，云服务器因为本机没有OuterIP，所以要改成InnerIPPort，然后在云防火墙中端口映射到InnerIPPort
             root.AddComponent<RouterComponent, IPEndPoint, string>(startSceneConfig.OuterIPPort, startSceneConfig.StartProcessConfig.InnerIP);
             Log.Console($"Router create: {root.Fiber.Id}");
-            
-            
-            root.AddComponent<HttpComponent, string>($"http://+:{startSceneConfig.GetHttpPort()}/");
-            
+
+            if (Options.Instance.AppType == AppType.TestDocker || Options.Instance.AppType == AppType.Docker)
+            {
+                root.AddComponent<HttpComponent, string>($"http://+:{startSceneConfig.GetHttpPort()}/");
+            }
+
             await ETTask.CompletedTask;
         }
     }

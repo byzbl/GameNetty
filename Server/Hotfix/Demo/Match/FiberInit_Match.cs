@@ -16,10 +16,12 @@ namespace ET.Server
             // root.AddComponent<MatchComponent>();
             root.AddComponent<LocationProxyComponent>();
             root.AddComponent<MessageLocationSenderComponent>();
+            if (Options.Instance.AppType == AppType.TestDocker || Options.Instance.AppType == AppType.Docker)
+            {
+                StartSceneConfig startSceneConfig = StartSceneConfigCategory.Instance.Get(root.Fiber.Id);
+                root.AddComponent<HttpComponent, string>($"http://+:{startSceneConfig.GetHttpPort()}/");
+            }
 
-            StartSceneConfig startSceneConfig = StartSceneConfigCategory.Instance.Get(root.Fiber.Id);
-            root.AddComponent<HttpComponent, string>($"http://+:{startSceneConfig.GetHttpPort()}/");
-            
             await ETTask.CompletedTask;
         }
     }

@@ -20,8 +20,11 @@ namespace ET.Server
 #if DOTNET_WEBGL
             root.AddComponent<NetWSComponent, IEnumerable<string>>(new[]{$"http://*:{startSceneConfig.Port}/"});
 #endif
-            
-            root.AddComponent<HttpComponent, string>($"http://+:{startSceneConfig.GetHttpPort()}/");
+            if (Options.Instance.AppType == AppType.TestDocker || Options.Instance.AppType == AppType.Docker)
+            {
+                root.AddComponent<HttpComponent, string>($"http://+:{startSceneConfig.GetHttpPort()}/");
+            }
+
             await ETTask.CompletedTask;
         }
     }

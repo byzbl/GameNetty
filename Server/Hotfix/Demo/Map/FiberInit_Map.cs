@@ -18,9 +18,21 @@ namespace ET.Server
             // root.AddComponent<RoomManagerComponent>();
             root.AddComponent<LocationProxyComponent>();
             root.AddComponent<MessageLocationSenderComponent>();
-            
-            StartSceneConfig startSceneConfig = StartSceneConfigCategory.Instance.Get((int)root.Id);
-            root.AddComponent<HttpComponent, string>($"http://+:{startSceneConfig.GetHttpPort()}/");
+
+            if (Options.Instance.AppType == AppType.TestDocker || Options.Instance.AppType == AppType.Docker)
+            {
+                StartSceneConfig startSceneConfig = StartSceneConfigCategory.Instance.Get((int)root.Id);
+                root.AddComponent<HttpComponent, string>($"http://+:{startSceneConfig.GetHttpPort()}/");
+            }
+
+            root.AddComponent<DBManagerComponent>();
+            var dbComponent = root.GetComponent<DBManagerComponent>().GetZoneDB(1);
+            /*var roleInfo = await dbComponent.GetSqlSugarScopeProvider().Queryable<RoleInfo>()
+                    .Where(d => d.Id == 1).FirstAsync();
+            if (roleInfo != null)
+            {
+               Log.Info(roleInfo.Name);
+            }*/
             await ETTask.CompletedTask;
         }
     }

@@ -19,6 +19,8 @@ namespace ET
             Id = _buf.ReadInt();
             DBConnection = _buf.ReadString();
             DBName = _buf.ReadString();
+            MysqlConnection = _buf.ReadString();
+            RedisConnection = _buf.ReadString();
             Desc = _buf.ReadString();
 
             PostInit();
@@ -45,6 +47,16 @@ namespace ET
         public readonly string DBName;
 
         /// <summary>
+        /// Mysql游戏数据库地址
+        /// </summary>
+        public readonly string MysqlConnection;
+
+        /// <summary>
+        /// Redis连接地址
+        /// </summary>
+        public readonly string RedisConnection;
+
+        /// <summary>
         /// 说明
         /// </summary>
         public readonly string Desc;
@@ -59,6 +71,8 @@ namespace ET
             + "Id:" + Id + ","
             + "DBConnection:" + DBConnection + ","
             + "DBName:" + DBName + ","
+            + "MysqlConnection:" + MysqlConnection + ","
+            + "RedisConnection:" + RedisConnection + ","
             + "Desc:" + Desc + ","
             + "}";
         }
