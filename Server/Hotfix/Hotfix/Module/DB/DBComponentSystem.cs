@@ -23,18 +23,23 @@ namespace ET.Server
                 ConnectionString = mysqlConnStr + ";CharSet=utf8mb4;",
                 ConfigId = $"{self.Root().Name}_MySQl",
             };
-            if (DBManagerComponent.SqlSugar == null)
-            {
-                DBManagerComponent.SqlSugar = new SqlSugarScope(config);
-            }
-            else
-            {
-                DBManagerComponent.SqlSugar.AddConnection(config);
-            }
+            SqlSugarScope sqlSugarScope = new SqlSugarScope(config);
 
-            SqlSugarScopeProvider dbProvider = DBManagerComponent.SqlSugar.GetConnectionScope(config.ConfigId);
-            dbProvider.Aop.OnLogExecuting = (sql, pars) => { Log.Info($"执行{dbName}库:{sql}{pars}"); };
-            self.m_sqlSugerProvider = dbProvider;
+            //读写分离配置
+            /*SqlSugarScope sqlSugar = new SqlSugarScope(new List<ConnectionConfig>{
+                new ConnectionConfig(){ ConfigId = "master", ... }, // 主库
+                new ConnectionConfig(){ ConfigId = "slave1", ... }  // 从库
+            }, db => {
+                db.Aop.OnLogExecuting = (sql, pars) => {
+                    db.ChangeDatabase(sql.Contains("SELECT") ? "slave1" : "master");
+                };
+            });*/
+            
+            //Sql语句打印
+            //SqlSugarScopeProvider dbProvider = sqlSugarScope.GetConnectionScope(config.ConfigId);
+            // dbProvider.Aop.OnLogExecuting = (sql, pars) => { Log.Info($"执行{dbName}库:{sql}{pars}"); };
+            self.m_sqlSuger = sqlSugarScope;
+          
             Log.Info($"mysql  {config.ConfigId} connect success");
         }
 
