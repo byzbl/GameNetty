@@ -7,207 +7,207 @@ namespace ET.Server
 {
     public static class RedisHelper
     {
-        public static IDatabase GetClient(Scene entity, int zone)
+        public static IDatabase GetClient(Scene entity)
         {
-            RedisComponent component = entity.Root().GetComponent<RedisManagerComponent>().GetZoneRedis(zone);
+            RedisComponent component = entity.Root().GetComponent<RedisManagerComponent>().GetZoneRedis(entity.Root().Zone());
             return component.Database;
         }
 
-        public static async ETTask<bool> HashAddAsync(Scene scene, int zone, string key, string id, string value)
+        public static async ETTask<bool> HashAddAsync(Scene scene, string key, string id, string value)
         {
             try
             {
-                return await GetClient(scene, zone).HashSetAsync(key, id, value);
+                return await GetClient(scene).HashSetAsync(key, id, value);
             }
             catch (Exception e)
             {
                 Log.Error(e);
                 Log.Warning("Redis Trigger ReConnect");
-                scene.Root().GetComponent<RedisManagerComponent>().ReConnect(zone);
-                return await GetClient(scene, zone).HashSetAsync(key, id, value);
+                scene.Root().GetComponent<RedisManagerComponent>().ReConnect(scene.Zone());
+                return await GetClient(scene).HashSetAsync(key, id, value);
             }
         }
 
-        public static async ETTask<string> HashGetAsync(Scene scene, int zone, string key, string id)
+        public static async ETTask<string> HashGetAsync(Scene scene, string key, string id)
         {
             try
             {
-                return await GetClient(scene, zone).HashGetAsync(key, id);
+                return await GetClient(scene).HashGetAsync(key, id);
             }
             catch (Exception e)
             {
                 Log.Error(e);
                 Log.Warning("Redis Trigger ReConnect");
-                scene.Root().GetComponent<RedisManagerComponent>().ReConnect(zone);
-                return await GetClient(scene, zone).HashGetAsync(key, id);
+                scene.Root().GetComponent<RedisManagerComponent>().ReConnect(scene.Zone());
+                return await GetClient(scene).HashGetAsync(key, id);
             }
         }
 
-        public static string HashGet(Scene scene, int zone, string key, string id)
+        public static string HashGet(Scene scene, string key, string id)
         {
             try
             {
-                return GetClient(scene, zone).HashGet(key, id);
+                return GetClient(scene).HashGet(key, id);
             }
             catch (Exception e)
             {
                 Log.Error(e);
                 Log.Warning("Redis Trigger ReConnect");
-                scene.Root().GetComponent<RedisManagerComponent>().ReConnect(zone);
-                return GetClient(scene, zone).HashGet(key, id);
+                scene.Root().GetComponent<RedisManagerComponent>().ReConnect(scene.Zone());
+                return GetClient(scene).HashGet(key, id);
             }
         }
 
-        public static bool HashAdd(Scene scene, int zone, string key, string id, string value)
+        public static bool HashAdd(Scene scene, string key, string id, string value)
         {
             try
             {
-                return GetClient(scene, zone).HashSet(key, id, value);
+                return GetClient(scene).HashSet(key, id, value);
             }
             catch (Exception e)
             {
                 Log.Error(e);
                 Log.Warning("Redis Trigger ReConnect");
-                scene.Root().GetComponent<RedisManagerComponent>().ReConnect(zone);
-                return GetClient(scene, zone).HashSet(key, id, value);
+                scene.Root().GetComponent<RedisManagerComponent>().ReConnect(scene.Zone());
+                return GetClient(scene).HashSet(key, id, value);
             }
         }
 
-        public static async ETTask<bool> ZSetAdd(Scene scene, int zone, string key, long unitId, long score)
+        public static async ETTask<bool> ZSetAdd(Scene scene, string key, long unitId, long score)
         {
             try
             {
-                return await GetClient(scene, zone).SortedSetAddAsync(key, unitId, score);
+                return await GetClient(scene).SortedSetAddAsync(key, unitId, score);
             }
             catch (Exception e)
             {
                 Log.Error(e);
                 Log.Warning("Redis Trigger ReConnect");
-                scene.Root().GetComponent<RedisManagerComponent>().ReConnect(zone);
-                return await GetClient(scene, zone).SortedSetAddAsync(key, unitId, score);
+                scene.Root().GetComponent<RedisManagerComponent>().ReConnect(scene.Zone());
+                return await GetClient(scene).SortedSetAddAsync(key, unitId, score);
             }
         }
 
-        public static async ETTask<bool> SetAdd(Scene scene, int zone, string key, long unitId)
+        public static async ETTask<bool> SetAdd(Scene scene, string key, long unitId)
         {
             try
             {
-                return await GetClient(scene, zone).SetAddAsync(key, unitId);
+                return await GetClient(scene).SetAddAsync(key, unitId);
             }
             catch (Exception e)
             {
                 Log.Error(e);
                 Log.Warning("Redis Trigger ReConnect");
-                scene.Root().GetComponent<RedisManagerComponent>().ReConnect(zone);
-                return await GetClient(scene, zone).SetAddAsync(key, unitId);
+                scene.Root().GetComponent<RedisManagerComponent>().ReConnect(scene.Zone());
+                return await GetClient(scene).SetAddAsync(key, unitId);
             }
         }
 
-        private static async ETTask<bool> StringSetAsync(Scene scene, int zone, string key, string value, TimeSpan t)
+        private static async ETTask<bool> StringSetAsync(Scene scene, string key, string value, TimeSpan t)
         {
             try
             {
-                return await GetClient(scene, zone).StringSetAsync(key, value, t);
+                return await GetClient(scene).StringSetAsync(key, value, t);
             }
             catch (Exception e)
             {
                 Log.Error(e);
                 Log.Warning("Redis Trigger ReConnect");
-                scene.Root().GetComponent<RedisManagerComponent>().ReConnect(zone);
-                return await GetClient(scene, zone).StringSetAsync(key, value, t);
+                scene.Root().GetComponent<RedisManagerComponent>().ReConnect(scene.Zone());
+                return await GetClient(scene).StringSetAsync(key, value, t);
             }
         }
 
-        public static async ETTask<bool> SetString(Scene scene, int zone, string key, string value, TimeSpan t)
+        public static async ETTask<bool> SetString(Scene scene, string key, string value, TimeSpan t)
         {
-            return await StringSetAsync(scene, zone, key, value, t);
+            return await StringSetAsync(scene, key, value, t);
         }
 
-        private static async ETTask<bool> StringSetAsync(Scene scene, int zone, string key, string value)
+        private static async ETTask<bool> StringSetAsync(Scene scene, string key, string value)
         {
             try
             {
-                return await GetClient(scene, zone).StringSetAsync(key, value);
+                return await GetClient(scene).StringSetAsync(key, value);
             }
             catch (Exception e)
             {
                 Log.Error(e);
                 Log.Warning("Redis Trigger ReConnect");
-                scene.Root().GetComponent<RedisManagerComponent>().ReConnect(zone);
-                return await GetClient(scene, zone).StringSetAsync(key, value);
+                scene.Root().GetComponent<RedisManagerComponent>().ReConnect(scene.Zone());
+                return await GetClient(scene).StringSetAsync(key, value);
             }
         }
 
-        private static async ETTask<string> StringGetAsync(Scene scene, int zone, string key)
+        private static async ETTask<string> StringGetAsync(Scene scene, string key)
         {
             try
             {
-                return await GetClient(scene, zone).StringGetAsync(key);
+                return await GetClient(scene).StringGetAsync(key);
             }
             catch (Exception e)
             {
                 Log.Error(e);
                 Log.Warning("Redis Trigger ReConnect");
-                scene.Root().GetComponent<RedisManagerComponent>().ReConnect(zone);
-                return await GetClient(scene, zone).StringGetAsync(key);
+                scene.Root().GetComponent<RedisManagerComponent>().ReConnect(scene.Zone());
+                return await GetClient(scene).StringGetAsync(key);
             }
         }
 
-        public static async ETTask<string> GetString(Scene scene, int zone, string key)
+        public static async ETTask<string> GetString(Scene scene, string key)
         {
-            return await StringGetAsync(scene, zone, key);
+            return await StringGetAsync(scene, key);
         }
 
-        private static async ETTask KeyDeleteAsync(Scene scene, int zone, string key)
+        private static async ETTask KeyDeleteAsync(Scene scene, string key)
         {
             try
             {
-                await GetClient(scene, zone).KeyDeleteAsync(key);
+                await GetClient(scene).KeyDeleteAsync(key);
             }
             catch (Exception e)
             {
                 Log.Error(e);
                 Log.Warning("Redis Trigger ReConnect");
-                scene.Root().GetComponent<RedisManagerComponent>().ReConnect(zone);
-                await GetClient(scene, zone).KeyDeleteAsync(key);
+                scene.Root().GetComponent<RedisManagerComponent>().ReConnect(scene.Zone());
+                await GetClient(scene).KeyDeleteAsync(key);
             }
         }
 
-        public static async ETTask DeleteKey(Scene scene, int zone, string key)
+        public static async ETTask DeleteKey(Scene scene, string key)
         {
-            await KeyDeleteAsync(scene, zone, key);
+            await KeyDeleteAsync(scene, key);
         }
 
-        public static async ETTask<bool> SetAccountToken(Scene scene, int zone, long accountId, string token)
+        public static async ETTask<bool> SetAccountToken(Scene scene, long accountId, string token)
         {
-            return await StringSetAsync(scene, zone, $"Account:{accountId}", token, TimeSpan.FromDays(2));
+            return await StringSetAsync(scene, $"Account:{accountId}", token, TimeSpan.FromDays(2));
         }
 
-        public static async ETTask<string> GetAccountToken(Scene scene, int zone, long accountId)
+        public static async ETTask<string> GetAccountToken(Scene scene, long accountId)
         {
-            return await StringGetAsync(scene, zone, $"Account:{accountId}");
+            return await StringGetAsync(scene, $"Account:{accountId}");
         }
 
-        public static async ETTask DelAccountToken(Scene scene, int zone, long accountId)
+        public static async ETTask DelAccountToken(Scene scene, long accountId)
         {
-            await KeyDeleteAsync(scene, zone, $"Account:{accountId}");
+            await KeyDeleteAsync(scene, $"Account:{accountId}");
         }
 
-        public static async ETTask<bool> LockTakeAccount(Scene scene, int zone, string account)
+        public static async ETTask<bool> LockTakeAccount(Scene scene, string account)
         {
-            return await GetClient(scene, zone).LockTakeAsync($"Lock:Acount:{account}", account, TimeSpan.FromSeconds(15));
+            return await GetClient(scene).LockTakeAsync($"Lock:Acount:{account}", account, TimeSpan.FromSeconds(15));
         }
 
-        public static async ETTask<bool> LockReleaseAccount(Scene scene, int zone, string account)
+        public static async ETTask<bool> LockReleaseAccount(Scene scene, string account)
         {
-            return await GetClient(scene, zone).LockReleaseAsync($"Lock:Acount:{account}", account);
+            return await GetClient(scene).LockReleaseAsync($"Lock:Acount:{account}", account);
         }
 
-        public static async ETTask<bool> LockAsync(Scene scene, int zone, string key, TimeSpan t)
+        public static async ETTask<bool> LockAsync(Scene scene, string key, TimeSpan t)
         {
             for (int i = 0; i < 50; i++)
             {
-                if (await GetClient(scene, zone).LockTakeAsync(key, key, t))
+                if (await GetClient(scene).LockTakeAsync(key, key, t))
                 {
                     return true;
                 }
@@ -226,11 +226,11 @@ namespace ET.Server
         /// <param name="key"></param>
         /// <param name="t"></param>
         /// <returns></returns>
-        public static bool LockSync(Scene scene, int zone, string key, TimeSpan t)
+        public static bool LockSync(Scene scene, string key, TimeSpan t)
         {
             for (int i = 0; i < 50; i++)
             {
-                if (GetClient(scene, zone).LockTake(key, key, t))
+                if (GetClient(scene).LockTake(key, key, t))
                 {
                     return true;
                 }
@@ -241,22 +241,22 @@ namespace ET.Server
             return false;
         }
 
-        public static bool UnLockSync(Scene scene, int zone, string key)
+        public static bool UnLockSync(Scene scene, string key)
         {
-            return GetClient(scene, zone).LockRelease(key, key);
+            return GetClient(scene).LockRelease(key, key);
         }
 
-        public static async ETTask<bool> UnLock(Scene scene, int zone, string key)
+        public static async ETTask<bool> UnLock(Scene scene, string key)
         {
-            return await GetClient(scene, zone).LockReleaseAsync(key, key);
+            return await GetClient(scene).LockReleaseAsync(key, key);
         }
 
-        public static async ETTask<bool> TryLock(Scene scene, int zone, List<string> lst, TimeSpan t)
+        public static async ETTask<bool> TryLock(Scene scene, List<string> lst, TimeSpan t)
         {
             lst.Sort();
             foreach (string key in lst)
             {
-                if (!await LockAsync(scene, zone, key, t))
+                if (!await LockAsync(scene, key, t))
                 {
                     return false;
                 }
@@ -265,11 +265,11 @@ namespace ET.Server
             return true;
         }
 
-        public static async ETTask UnLock(Scene scene, int zone, List<string> lst)
+        public static async ETTask UnLock(Scene scene, List<string> lst)
         {
             foreach (string key in lst)
             {
-                await GetClient(scene, zone).LockReleaseAsync(key, key);
+                await GetClient(scene).LockReleaseAsync(key, key);
             }
         }
 
@@ -278,9 +278,9 @@ namespace ET.Server
         /// </summary>
         /// <param name="accountId"></param>
         /// <returns></returns>
-        public static async ETTask<string> GetCurGateId(Scene scene, int zone, long accountId)
+        public static async ETTask<string> GetCurGateId(Scene scene, long accountId)
         {
-            return await StringGetAsync(scene, zone, $"Gate:{accountId}");
+            return await StringGetAsync(scene, $"Gate:{accountId}");
         }
 
         /// <summary>
@@ -289,14 +289,14 @@ namespace ET.Server
         /// <param name="accountId"></param>
         /// <param name="gateId"></param>
         /// <returns></returns>
-        public static async ETTask<bool> SetCurGateId(Scene scene, int zone, long accountId, long gateId)
+        public static async ETTask<bool> SetCurGateId(Scene scene, long accountId, long gateId)
         {
-            return await StringSetAsync(scene, zone, $"Gate:{accountId}", gateId.ToString(), TimeSpan.FromDays(14));
+            return await StringSetAsync(scene, $"Gate:{accountId}", gateId.ToString(), TimeSpan.FromDays(14));
         }
 
-        public static async ETTask<bool> DelCurGateId(Scene scene, int zone, long accountId, long gateId)
+        public static async ETTask<bool> DelCurGateId(Scene scene, long accountId, long gateId)
         {
-            var curId = await GetCurGateId(scene, zone, accountId);
+            var curId = await GetCurGateId(scene, accountId);
             if (string.IsNullOrEmpty(curId))
             {
                 return true;
@@ -304,25 +304,25 @@ namespace ET.Server
 
             if (long.Parse(curId) == gateId)
             {
-                await KeyDeleteAsync(scene, zone, $"Gate:{accountId}");
+                await KeyDeleteAsync(scene, $"Gate:{accountId}");
                 return true;
             }
 
             return false;
         }
 
-        public static async ETTask<long> StringIncrementAsync(Scene scene, int zone, string key)
+        public static async ETTask<long> StringIncrementAsync(Scene scene, string key)
         {
             try
             {
-                return await GetClient(scene, zone).StringIncrementAsync(key);
+                return await GetClient(scene).StringIncrementAsync(key);
             }
             catch (Exception e)
             {
                 Log.Error(e);
                 Log.Warning("Redis Trigger ReConnect");
-                scene.Root().GetComponent<RedisManagerComponent>().ReConnect(zone);
-                return await GetClient(scene, zone).StringIncrementAsync(key);
+                scene.Root().GetComponent<RedisManagerComponent>().ReConnect(scene.Zone());
+                return await GetClient(scene).StringIncrementAsync(key);
             }
         }
 
@@ -330,9 +330,9 @@ namespace ET.Server
         /// 获取参赛号牌
         /// </summary>
         /// <returns></returns>
-        public static async ETTask<long> GetMinerRankEntryNumer(Scene scene, int zone, int activityId)
+        public static async ETTask<long> GetMinerRankEntryNumer(Scene scene, int activityId)
         {
-            long num = await StringIncrementAsync(scene, zone, $"MinerRankEntryNumer:{activityId}");
+            long num = await StringIncrementAsync(scene, $"MinerRankEntryNumer:{activityId}");
             return num;
         }
 
@@ -340,17 +340,17 @@ namespace ET.Server
         /// 获取参赛号牌
         /// </summary>
         /// <returns></returns>
-        public static async ETTask<long> GetMiniGameRankEntryNumer(Scene scene, int zone, int activityId)
+        public static async ETTask<long> GetMiniGameRankEntryNumer(Scene scene, int activityId)
         {
-            long num = await StringIncrementAsync(scene, zone, $"MiniGameRankEntryNumer:{activityId}");
+            long num = await StringIncrementAsync(scene, $"MiniGameRankEntryNumer:{activityId}");
             return num;
         }
 
-        public static async ETTask<long> LoginRateLimiterNum(Scene scene, int zone, long timeNow)
+        public static async ETTask<long> LoginRateLimiterNum(Scene scene, long timeNow)
         {
             string key = $"LoginRateLimiter:{timeNow}";
-            long num = await StringIncrementAsync(scene, zone, key);
-            await GetClient(scene, zone).KeyExpireAsync(key, TimeSpan.FromSeconds(5));
+            long num = await StringIncrementAsync(scene, key);
+            await GetClient(scene).KeyExpireAsync(key, TimeSpan.FromSeconds(5));
             return num;
         }
     }

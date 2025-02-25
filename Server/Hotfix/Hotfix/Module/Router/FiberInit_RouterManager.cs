@@ -20,9 +20,9 @@ namespace ET.Server
             {
                 Log.Info(roleInfo.Name);
             }*/
-            /*
             root.AddComponent<RedisManagerComponent>();
-            bool f = await RedisHelper.SetString(root, root.Zone(), "test", "test123", TimeSpan.FromDays(1));
+
+            bool f = await RedisHelper.SetString(root, "test", "test123", TimeSpan.FromDays(1));
             if (!f)
             {
                 Log.Info("redis测试写入失败");
@@ -32,9 +32,8 @@ namespace ET.Server
                 Log.Info("redis测试写入成功");
             }
 
-            string test = await RedisHelper.GetString(root, root.Zone(), "test");
+            string test = await RedisHelper.GetString(root, "test");
             Log.Info(test);
-            */
 
             await ETTask.CompletedTask;
         }
